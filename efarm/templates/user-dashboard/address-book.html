@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/theme.css' %}" />
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap.min.css' %}" /> {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap-select.min.css' %}" /> {% endcomment %}
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/owl.carousel.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/font-awesome.min.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/animate.css' %}" />
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Address Book</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'my-account' %}">My Account</a></li>
+                    <li class="breadcrumb-item active">Address Book</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- My Account Starts-->
+<section class="account-page ptb-50">
+    <div class="container"> 
+        <div class="row">  
+            <aside class="col-md-9 col-sm-8 ptb-15">
+                <div class="account-wrap">
+                    <form method="POST" action="{% url 'address-book' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label> Address-1 </label>
+                                {% if shipping_address.address1 %}
+                                <input type="text" class="form-control" name="address1" value="{{ shipping_address.address1 }}" placeholder="Enter Floor no. / Building / House no."  required>  
+                                {% else %}
+                                <input type="text" class="form-control" name="address1" placeholder="Enter Floor no. / Building / House no."  required>  
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label> Address-2 </label>
+                                {% if shipping_address.address2 %}
+                                <input type="text" class="form-control" name="address2" value="{{ shipping_address.address2 }}"  placeholder="Enter Street name"  required>   
+                                {% else %}
+                                <input type="text" class="form-control" name="address2" placeholder="Enter Street name"  required>   
+                                {% endif %}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label> Landmark </label>
+                                {% if shipping_address.landmark %}
+                                <input type="text" class="form-control" name="landmark" value="{{ shipping_address.landmark }}" placeholder="Enter Landmark" >  
+                                {% else %}
+                                <input type="text" class="form-control" name="landmark" placeholder="Enter Landmark" >  
+                                {% endif %}                                               
+                            </div>    
+                            <div class="form-group col-sm-6">
+                                <label> Zip/Postal Code </label>
+                                {% if shipping_address.zipcode %}
+                                <input type="text" pattern="\d*" maxlength="6" name="zipcode" value="{{ shipping_address.zipcode }}" placeholder="Enter Zipcode"  class="form-control" >                                               
+                                <div class="invalid-feedback"> Zip code required. </div>
+                                {% else %}
+                                <input type="text" pattern="\d*" maxlength="6" name="zipcode" class="form-control" placeholder="Enter Zipcode"  >                                               
+                                <div class="invalid-feedback"> Zip code required. </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label>  State  </label>
+                                <div class="search-selectpicker selectpicker-wrapper">
+                                    <select class="wide w-100" name="state" data-width="100%"
+                                            data-toggle="tooltip" id="stateSelect" size="1" onchange="makeSubmenu(this.value)">  
+                                        {% if shipping_address.state %}
+                                            <option value="{{ shipping_address.state }}" >{{ shipping_address.state }}</option> 
+                                        {% else %}                           
+                                            <option value="" disabled selected>Choose State</option>   
+                                        {% endif %}
+
+                                            <option>Andhra_Pradesh</option>
+                                            <option>Arunachal_Pradesh</option>
+                                            <option>Assam</option>
+                                            <option>Bihar</option>
+                                            <option>Chhattisgarh</option>
+                                            <option>Delhi</option>
+                                            <option>Goa</option>
+                                            <option>Gujarat</option>
+                                            <option>Haryana</option>
+                                            <option>Himachal_Pradesh</option>
+                                            <option>Jharkhand</option>
+                                            <option>Karnataka</option>
+                                            <option>Kerala</option>
+                                            <option>Madhya_Pradesh</option>
+                                            <option>Maharashtra</option>
+                                            <option>Manipur</option>
+                                            <option>Meghalaya</option>
+                                            <option>Mizoram</option>
+                                            <option>Nagaland</option>
+                                            <option>Odisha</option>
+                                            <option>Punjab</option>
+                                            <option>Rajasthan</option>
+                                            <option>Sikkim</option>
+                                            <option>Tamil_Nadu</option>
+                                            <option>Telangana</option>
+                                            <option>Tripura</option>
+                                            <option>Uttar_Pradesh</option>
+                                            <option>Uttarakhand</option>
+                                            <option>West_Bengal</option>
+                                        </select>
+                                </div>                                                
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label>  City  </label>
+                                <div class="search-selectpicker selectpicker-wrapper">
+                                    <select class="wide w-100" name="city" id="citySelect" size="1" data-width="100%"
+                                            data-toggle="tooltip" >
+                                        {% if shipping_address.city %}
+                                            <option value="{{ shipping_address.city }}" >{{ shipping_address.city }}</option>
+                                        {% else %}   
+                                            <option value="" disabled selected>Choose City</option>
+                                        {% endif %}                        
+                                            <option></option>
+                                        
+                                    </select>
+                                </div>                                                
+                            </div>
+
+                            
+                            <div class="form-group col-sm-6">
+                                <label> Email </label>
+                                {% if shipping_address.email %}
+                                <input type="email" class="form-control" name="email" id="email" value="{{ shipping_address.email }}" placeholder="Enter your email" value="{{ user.email }}" required>   
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates.
+                                {% else %}
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email" required>   
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates.
+                                {% endif %}
+                                </div>
+                            </div>
+                            {% comment %}
+                            <div class="form-group col-sm-6">
+                                <label> * Phone Number </label>
+                                {% if shipping_address.phone %}
+                                <input type="text" pattern="\d*" maxlength="10" value="{{ shipping_address.phone }}" name="phone" placeholder="Enter your phone number" class="form-control" required>                                               
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% else %}
+                                <input type="text" pattern="\d*" maxlength="10" name="phone" class="form-control" placeholder="Enter your phone number" required>                                               
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% endif %}                                               
+                            </div>
+                            {% endcomment %}
+                            <div class="pt-15 col-sm-12">                                               
+                                <button type="submit" class="theme-btn btn-black"> <b> Update </b> </button>
+                                <a href="{% url 'my-account' %}" class="theme-btn btn"> <b> Go Back </b> </a>                                    
+                                        
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </aside>                        
+            
+            <!-- Sidebar Starts --> 
+            <aside class="col-md-3 col-sm-4">
+                <div class="widget-wrap">
+                    <h2 class="widget-title"> <span class="light-font">My</span> <strong>Account</strong> </h2>
+                    <div class="divider-full-1"></div>
+                    <ul class="cate-widget">
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'account-information' %}"> Account Information</a></li>                                        
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'my-account' %}"> My Account</a></li>                                        
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'change-password' %}"> Change Password</a></li>
+                        <li class="active"> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="#"> Address Books</a></li>
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'order-history' %}"> Order History</a></li>
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'return_request' %}"> Returns Requests</a></li>
+                    </ul>
+                </div>
+            </aside>   
+            <!-- Sidebar Ends --> 
+
+        </div>
+    </div>
+</section>
+<!-- / My Account Ends --> 
+
+
+
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/jquery-2.2.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/theme.js' %}"></script>
+{% comment %} <script type="text/javascript" src="{% static 'user-dashboard-static/js/bootstrap-select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/js/owl.carousel.min.js' %}"></script> {% endcomment %}
+
+<script type="text/javascript">
+    console.log('Inside JS')
+    var citiesByState = {
+        Andhra_Pradesh: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Tirupati"],
+        Arunachal_Pradesh: ["Tawang", "Bhismaknagar", "Pasighat", "Ziro", "Bomdila"],
+        Assam: ["Guwahati", "Tezpur", "Dibrugarh", "Silchar", "North Lakhimpur"],
+        Bihar: ["Gaya", "Biharsharif", "Darbhanga and Bhagalpur"],
+        Chhattisgarh: ["Bilaspur", "Korba", "Durg-Bhilainagar", "Raigarh", "Rajnandgaon"],
+        Delhi: ["New Delhi"],
+        Goa: ["Vasco-da-Gama", 'Ponda', "Margao", "Mapusa", "Goa Velha"],
+        Gujarat: ['Ahmedabad', "Surat", "Rajkot", "Junagadh", "Vadodara"],
+        Haryana: ['Faridabad', "Gurgaon", "Sonipat", "Panipat", "Ambala"],
+        Himachal_Pradesh: ["Dharamshala", "Mandi", "Solan", "Bilaspur", "Chamba"],
+        Jharkhand: ["Ranchi", "Jamshedpur", "Deoghar", "Hazaribagh", "Dhanbad"],
+        Karnataka: ["Bengaluru", "Mysore", "Davangere", "Mangalore", "Hubli-Dharwad", "Belgaum"],
+        Kerala: ["kochi","Kanpur"],
+        Madhya_Pradesh: ["Bhopal", 	"Indore", "Gwalior", "Jabalpur", "Ujjain"],
+        Maharashtra: ["Mumbai","Pune","Nagpur"],
+        Manipur: ["Imphal", "Bishnupur", "Ukhrul", "Tamenglong", "Chandel "],
+        Meghalaya: ["Shillong", "Cherrapunji", "Tura", "Jowai", "Baghmara "],
+        Mizoram: ["Aizawl", "Lunglei", "Serchhip", "Champhai", "Tuipang"],
+        Nagaland: ["Kohima", "Tuensang", "Zunheboto", "Mokokchung", "Kiphire"],
+        Odisha: ["Bhubaneswar","Puri","Cuttack"],
+        Punjab: ["Chandigarh", "Amritsar", "Jalandhar", "Ludhiana", "Patiala"],
+        Rajasthan: ["Jaipur", "Bikaner", "Jaisalmer", "Jodhpur", "Udaipur", "Ajmer"],
+        Sikkim: ['Gangtok', "Namchi", "Gyalshing", "Mangan"],
+        Tamil_Nadu: ['Chennai', "Tiruchirappalli", "Madurai", "Erode", "Vellore", "Coimbatore"],
+        Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Adilabad", "Khammam"],
+        Tripura: ["Agartala", "Amarpur", "Kumarghat", "Udaipur", "Gakulnagar"],
+        Uttar_Pradesh: ["Lucknow", "Noida", "Varanasi", "Allahabad", "Agra", "Kanpur"],
+        Uttarakhand: ["Dehradun", "Haridwar", "Roorkee", "Rishikesh", "Kashipu"],
+        West_Bengal: ["Kolkata", "Darjeeling", "Siliguri", "Asansol", "Howrah", "Durgapur"]
+    }
+    console.log("City = ", document.getElementById("citySelect"))
+    function makeSubmenu(value) {
+        console.log(value)
+        console.log(value.length)
+
+        if(value.length==0) {
+            document.getElementById('citySelect').innerHTML = '<option></option>';
+            
+            console.log("if "+ document.getElementById("citySelect").innerHTML);
+
+        }
+        else {
+            var citiesOptions = "";
+            for(cityId in citiesByState[value]) {
+                console.log("City value = ",citiesByState[value]);
+                console.log("City Id = ",citiesByState[cityId]);
+
+                citiesOptions+='<option>'+citiesByState[value][cityId]+'</option>';
+                console.log("after loop = ",citiesOptions);
+            }
+            // var citySelect = document.getElementById("citySelect");
+            // select.outerHTML = select.outerHTML.replace(
+            //     select.innerHTML,
+            //     citiesOptions
+            // )
+            console.log("Before Overall = ",citiesOptions)
+            document.getElementById("citySelect").innerHTML = citiesOptions;
+            console.log("After Overall = ",citiesOptions)
+            // console.log("City = ", document.getElementById("citySelect"))
+        }
+    }
+    </script>
+
+<!-- / My Account Ends --> 
+{% endblock %}

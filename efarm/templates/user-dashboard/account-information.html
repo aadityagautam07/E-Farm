@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/theme.css' %}" />
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap.min.css' %}" /> {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap-select.min.css' %}" /> {% endcomment %}
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/owl.carousel.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/font-awesome.min.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/animate.css' %}" />
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>My Account</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'my-account' %}">My Account</a></li>
+                    <li class="breadcrumb-item active">Account Information</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- My Account Starts-->
+<section class="account-page ptb-50">
+    <div class="container"> 
+        <div class="row">  
+            <aside class="col-md-9 col-sm-8 ptb-15">
+                <div class="account-wrap">
+                    <form class="gray-control" method="POST" action="{% url 'account-information' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label> * First Name </label>
+                                <input type="text" name="fname" value="{{ user.first_name }}" class="form-control" required>                                               
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label> * Last Name </label>
+                                <input type="text" name="lname" value="{{ user.last_name }}" class="form-control" required>                                               
+                            </div>
+                             <div class="form-group col-sm-6">
+                                <label> * Email </label>
+                                <input type="email" name="email" id="email" value="{{ user.email }}" class="form-control" required>     
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates.
+                                </div>                                          
+                            </div>                                        
+                             <div class="form-group col-sm-6">
+                                <label> * Phone Number </label>
+                                {% if user.phone %}
+                                <input type="text" pattern="\d*" maxlength="10" value="{{ user.phone }}" onchange="onChange();" name="phone" class="form-control" required>                                               
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% else %}
+                                <input type="text" pattern="\d*" maxlength="10" name="phone" onchange="onChange();" class="form-control" required>                                               
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% endif %}
+                            </div>  
+                            
+                            <div class="pt-15 col-sm-12">                                               
+                                <button type="submit" class="theme-btn btn-black"> <b> Update </b> </button>
+                                <a href="{% url 'my-account' %}" class="theme-btn btn"> <b> Go Back </b> </a>                                    
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </aside>                        
+            
+            
+            <!-- Sidebar Starts --> 
+            <aside class="col-md-3 col-sm-4">
+                <div class="widget-wrap">
+                    <h2 class="widget-title"> <span class="light-font">My</span> <strong>Account</strong> </h2>
+                    <div class="divider-full-1"></div>
+                    <ul class="cate-widget">
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="#"> Account Information</a></li>                                        
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'my-account' %}"> My Account</a></li>                                        
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'change-password' %}"> Change Password</a></li>
+                        <li class="active"> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'address-book' %}"> Address Books</a></li>
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'order-history' %}"> Order History</a></li>
+                        <li> <i class="fa fa-arrow-circle-o-right clr-txt"></i> <a href="{% url 'return_request' %}"> Returns Requests</a></li>
+                    </ul>
+                </div>
+            </aside>  
+            <!-- Sidebar Ends --> 
+        </div>
+    </div>
+</section>
+<!-- / My Account Ends --> 
+
+<script type="text/javascript" >
+//     function onChange() {
+//      const phone = document.querySelector('input[name=phone]');
+//      if (phone.value.lenght == 10) {
+//         // phone.setCustomValidity('');
+//      } else {
+//        phone.setCustomValidity("Phone number must be of 10 digits");
+//      }
+//    }
+</script>
+
+
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/jquery-2.2.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/theme.js' %}"></script>
+{% comment %} <script type="text/javascript" src="{% static 'user-dashboard-static/js/bootstrap-select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/js/owl.carousel.min.js' %}"></script> {% endcomment %}
+
+
+// <!-- / My Account Ends --> 
+{% endblock %}
+
+

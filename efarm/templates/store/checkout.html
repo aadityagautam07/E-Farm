@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<!-- Start All Title Box -->
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Checkout</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'store' %}">Shop</a></li>
+                    <li class="breadcrumb-item active">Checkout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End All Title Box -->
+
+<!-- Start Cart  -->
+<div class="cart-box-main">
+    <div class="container">
+        <form class="needs-validation" id="form1" method="POST" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 mb-3">
+
+                    <!-- SHIPPING ADDRESS STARTS -->
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>Billing address</h3>
+                        </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName">First name *</label>
+                                    <input type="text" name="first_name" class="form-control" id="firstName"
+                                        placeholder="Enter first name" value="{{ user.first_name }}" required>
+                                    <div class="invalid-feedback"> Valid first name is required. </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName">Last name *</label>
+                                    <input type="text" name="last_name" class="form-control" id="lastName"
+                                        placeholder="Enter last name" value="{{ user.last_name }}" required>
+                                    <div class="invalid-feedback"> Valid last name is required. </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email">Email Address *</label>
+                                <input type="email" name="email" class="form-control" id="email"
+                                    placeholder="Enter your email" value="{{ user.email }}" readonly>
+                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="number">Phone Number *</label>
+                                {% if user.customer.phone %}
+                                <input type="text" pattern="\d*" value="{{ user.customer.phone }}" maxlength="10" name="phnumber" class="form-control" id="phnumber" placeholder="Enter phone number" required>
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% else %}
+                                <input type="text" pattern="\d*" maxlength="10" name="phnumber" class="form-control" id="phnumber" placeholder="Enter phone number" required>
+                                <div class="invalid-feedback"> Please enter your phone number. </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="address">Address 1 *</label>
+                                {% if user.customer.address1 %}
+                                <input type="text" name="address1" value="{{ user.customer.address1 }}" class="form-control" id="address1" placeholder="Enter Floor no. / Building / House no." required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% else %}
+                                <input type="text" name="address1" class="form-control" id="address1" placeholder="Enter Floor no. / Building / House no." required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address">Address 2 *</label>
+                                {% if user.customer.address2 %}
+                                <input type="text" name="address2" value="{{ user.customer.address2 }}" class="form-control" id="address2" placeholder="Enter Street name" required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% else %}
+                                <input type="text" name="address2" class="form-control" id="address2" placeholder="Enter Street name" required>
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="landmark">Landmark </label>
+                                {% if user.customer.landmark %}
+                                <input type="text" name="landmark" value="{{ user.customer.landmark }}" class="form-control" id="landmark" placeholder="Enter Landmark" >
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% else %}
+                                <input type="text" name="landmark" class="form-control" id="landmark" placeholder="Enter Landmark" >
+                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                {% endif %}
+                            </div>
+
+                            
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="state">State *</label>
+                                    <select class="wide w-100" name="state" id="stateSelect" size="1" onchange="makeSubmenu(this.value)" required>
+                                    {% if user.customer.state %}
+                                            <option value="{{ user.customer.state }}" data-display="Select">{{ user.customer.state }}</option>
+                                    {% else %} 
+                                    <option value="" disabled selected>Choose State</option>   
+                                    {% endif %}
+                                            <option value="" disabled selected>Choose State</option>
+                                            <option>Andhra_Pradesh</option>
+                                            <option>Arunachal_Pradesh</option>
+                                            <option>Assam</option>
+                                            <option>Bihar</option>
+                                            <option>Chhattisgarh</option>
+                                            <option>Delhi</option>
+                                            <option>Goa</option>
+                                            <option>Gujarat</option>
+                                            <option>Haryana</option>
+                                            <option>Himachal_Pradesh</option>
+                                            <option>Jharkhand</option>
+                                            <option>Karnataka</option>
+                                            <option>Kerala</option>
+                                            <option>Madhya_Pradesh</option>
+                                            <option>Maharashtra</option>
+                                            <option>Manipur</option>
+                                            <option>Meghalaya</option>
+                                            <option>Mizoram</option>
+                                            <option>Nagaland</option>
+                                            <option>Odisha</option>
+                                            <option>Punjab</option>
+                                            <option>Rajasthan</option>
+                                            <option>Sikkim</option>
+                                            <option>Tamil_Nadu</option>
+                                            <option>Telangana</option>
+                                            <option>Tripura</option>
+                                            <option>Uttar_Pradesh</option>
+                                            <option>Uttarakhand</option>
+                                            <option>West_Bengal</option>
+                                        </select>
+                                        <div class="invalid-feedback"> Please provide a valid state. </div>
+                                    
+                                </div>
+
+
+                                <div class="col-md-5 mb-3">
+                                    <label for="country">City *</label>
+                                    <select class="wide w-100" name="city" id="citySelect" size="1" required>
+                                {% if user.customer.city %}
+                                        <option value="{{ user.customer.city }}" data-display="Select">{{ user.customer.city }}</option>
+                                {% else %}  
+                                        <option value="" disabled selected>Choose City</option>
+                                {% endif %}
+                                        <option></option>
+                                    </select>
+                                    <div class="invalid-feedback"> Please select a valid country. </div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label for="zip">Zip *</label>
+                                {% if user.customer.zipcode %}
+                                    <input type="text" pattern="\d*" value="{{ user.customer.zipcode }}" maxlength="6" name="zipcode" class="form-control" id="zip" placeholder="Zip Code" required>
+                                    <div class="invalid-feedback"> Zip code required. </div>
+                                {% else %}  
+                                    <input type="text" pattern="\d*" maxlength="6" name="zipcode" class="form-control" id="zip" placeholder="Zip Code" required>
+                                    <div class="invalid-feedback"> Zip code required. </div>
+                                {% endif %}
+                                </div>
+                            </div>
+
+
+                            <hr class="mb-1">
+                        <!-- </form> -->
+                    </div>
+                    <!-- SHIPPING ADDRESS ENDS -->
+
+                </div>
+
+
+
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="row">
+                        
+                        <div class="col-md-12 col-lg-12">
+                            <div class="shipping-method-box">
+                            <div class="title-left">
+                                <h3>Shipping Method</h3>
+                            </div>
+
+                                <div class="mb-4">
+                                    {% if order.shipping_method == 'Standard Delivery' %}
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption1" name="shipping-option" value="Standard Delivery" class="custom-control-input"
+                                         type="radio" checked>
+                                        <label class="custom-control-label" for="shippingOption1">Standard
+                                            Delivery</label> <span class="float-right font-weight-bold">FREE</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(3-7 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption2" name="shipping-option" value="Express Delivery" class="custom-control-input"
+                                            type="radio">
+                                        <label class="custom-control-label" for="shippingOption2">Express
+                                            Delivery</label> <span class="float-right font-weight-bold">&#8377; 150.00</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(2-4 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption3" name="shipping-option" value="Next Business Day" class="custom-control-input"
+                                            type="radio">
+                                        <label class="custom-control-label" for="shippingOption3">Next Business
+                                            day</label> <span class="float-right font-weight-bold">&#8377; 500.00</span>
+                                    </div>
+                                    {% elif order.shipping_method == 'Express Delivery' %}
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption1" name="shipping-option" value="Standard Delivery" class="custom-control-input"
+                                         type="radio" >
+                                        <label class="custom-control-label" for="shippingOption1">Standard
+                                            Delivery</label> <span class="float-right font-weight-bold">FREE</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(3-7 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption2" name="shipping-option" value="Express Delivery" class="custom-control-input"
+                                            type="radio" checked>
+                                        <label class="custom-control-label" for="shippingOption2">Express
+                                            Delivery</label> <span class="float-right font-weight-bold">&#8377; 150.00</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(2-4 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption3" name="shipping-option" value="Next Business Day" class="custom-control-input"
+                                            type="radio">
+                                        <label class="custom-control-label" for="shippingOption3">Next Business
+                                            day</label> <span class="float-right font-weight-bold">&#8377; 500.00</span>
+                                    </div>
+                                    {% else %}
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption1" name="shipping-option" value="Standard Delivery" class="custom-control-input"
+                                         type="radio">
+                                        <label class="custom-control-label" for="shippingOption1">Standard
+                                            Delivery</label> <span class="float-right font-weight-bold">FREE</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(3-7 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption2" name="shipping-option" value="Express Delivery" class="custom-control-input"
+                                            type="radio">
+                                        <label class="custom-control-label" for="shippingOption2">Express
+                                            Delivery</label> <span class="float-right font-weight-bold">&#8377; 150.00</span>
+                                    </div>
+                                    <div class="ml-4 mb-2 small">(2-4 business days)</div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="shippingOption3" name="shipping-option" value="Next Business Day" class="custom-control-input"
+                                            type="radio" checked>
+                                        <label class="custom-control-label" for="shippingOption3">Next Business
+                                            day</label> <span class="float-right font-weight-bold">&#8377; 500.00</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- SHOPPING CART STARTS -->
+                        <div class="col-md-12 col-lg-12">
+                            <div class="odr-box">
+                                <div class="title-left">
+                                    <h3>Shopping cart</h3>
+                                </div>
+                                <div class="rounded p-2 bg-light">
+                                    {% for item in items %}
+                                    <div class="media mb-2 border-bottom">
+                                        <div class="media-body"> <a href="{% url 'product_details' item.product.id %}">
+                                                {{ item.product.product_name }}</a>
+
+                                            {% if item.product.discount != '0%' %}
+                                            <div class="small text-muted">Price: &#8377; <del>{{ item.product.original_price  | floatformat:1 | intcomma }} </del> = {{ item.product.after_discount_price | floatformat:1 | intcomma }}
+                                                <span class="mx-2">|</span> Qty:
+                                                {{ item.quantity }} <span class="mx-2">|</span> Subtotal: &#8377;
+                                                {{ item.get_total | floatformat:1 | intcomma }}
+                                            </div>
+                                            {% else %}
+                                            <div class="small text-muted">Price: &#8377; {{ item.product.original_price | floatformat:1 | intcomma }}</del>
+                                                <span class="mx-2">|</span> Qty:
+                                                {{ item.quantity }} <span class="mx-2">|</span> Subtotal: &#8377;
+                                                {{ item.get_total | floatformat:1 | intcomma }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- SHOPPING CART ENDS -->
+
+                        <!-- YOUR ORDER STARTS -->
+                        <div class="col-lg-40 col-sm-12">
+                            <div class="order-box">
+                                <div class="title-left">
+                                    <h3>Your order</h3>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="font-weight-bold">Product</div>
+                                    <div class="ml-auto font-weight-bold">Total</div>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex">
+                                    <h4>Sub Total</h4>
+                                    <div class="ml-auto font-weight-bold"> &#8377; {{ order.get_cart_original_total | floatformat:1 | intcomma }} </div>
+                                </div>
+                                <div class="d-flex">
+                                    <h4>Discount</h4>
+                                    <div class="ml-auto font-weight-bold">- &#8377; {{ order.get_cart_discount_total | floatformat:1 | intcomma }} </div>
+                                </div>
+                                <hr class="my-1">
+                                <div class="d-flex">
+                                    <h4>Shipping Cost</h4>
+                                    {% if order.shipping_method == 'Express Delivery' %}
+                                    <div class="ml-auto font-weight-bold">+ &#8377; 150.00 </div>
+                                    {% elif order.shipping_method == 'Next Business Day' %}
+                                    <div class="ml-auto font-weight-bold">+ &#8377; 500.00 </div>
+                                    {% else %}
+                                    <div class="ml-auto font-weight-bold"> Free (Standard Delivery)
+                                                                <br>+  (Express Delivery) &#8377; 150.00
+                                                                <br>+  (Next Business Day) &#8377; 500.00
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <hr>
+                                <div class="d-flex gr-total">
+                                    <h5>Grand Total</h5>
+                                    <div class="ml-auto h5"> &#8377; {{ order.get_cart_total | floatformat:1 | intcomma }}
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <!-- YOUR ORDER ENDS -->
+
+                        <div class="col-12 d-flex shopping-box" id="place-order">
+                            <button class="ml-auto btn hvr-hover" id="placeBtn" style="color: white" type="submit" onclick="submitform();" value="Continue">Place
+                                Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- End Cart -->
+
+<script type="text/javascript">
+
+submitform = function() {
+    console.log('inside submit form place order')
+    
+
+}
+
+</script>
+
+<script type="text/javascript">
+    console.log('Inside JS')
+    var citiesByState = {
+        Andhra_Pradesh: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Tirupati"],
+        Arunachal_Pradesh: ["Tawang", "Bhismaknagar", "Pasighat", "Ziro", "Bomdila"],
+        Assam: ["Guwahati", "Tezpur", "Dibrugarh", "Silchar", "North Lakhimpur"],
+        Bihar: ["Gaya", "Biharsharif", "Darbhanga and Bhagalpur"],
+        Chhattisgarh: ["Bilaspur", "Korba", "Durg-Bhilainagar", "Raigarh", "Rajnandgaon"],
+        Delhi: ["New Delhi"],
+        Goa: ["Vasco-da-Gama", 'Ponda', "Margao", "Mapusa", "Goa Velha"],
+        Gujarat: ['Ahmedabad', "Surat", "Rajkot", "Junagadh", "Vadodara"],
+        Haryana: ['Faridabad', "Gurgaon", "Sonipat", "Panipat", "Ambala"],
+        Himachal_Pradesh: ["Dharamshala", "Mandi", "Solan", "Bilaspur", "Chamba"],
+        Jharkhand: ["Ranchi", "Jamshedpur", "Deoghar", "Hazaribagh", "Dhanbad"],
+        Karnataka: ["Bengaluru", "Mysore", "Davangere", "Mangalore", "Hubli-Dharwad", "Belgaum"],
+        Kerala: ["kochi","Kanpur"],
+        Madhya_Pradesh: ["Bhopal", 	"Indore", "Gwalior", "Jabalpur", "Ujjain"],
+        Maharashtra: ["Mumbai","Pune","Nagpur"],
+        Manipur: ["Imphal", "Bishnupur", "Ukhrul", "Tamenglong", "Chandel "],
+        Meghalaya: ["Shillong", "Cherrapunji", "Tura", "Jowai", "Baghmara "],
+        Mizoram: ["Aizawl", "Lunglei", "Serchhip", "Champhai", "Tuipang"],
+        Nagaland: ["Kohima", "Tuensang", "Zunheboto", "Mokokchung", "Kiphire"],
+        Odisha: ["Bhubaneswar","Puri","Cuttack"],
+        Punjab: ["Chandigarh", "Amritsar", "Jalandhar", "Ludhiana", "Patiala"],
+        Rajasthan: ["Jaipur", "Bikaner", "Jaisalmer", "Jodhpur", "Udaipur", "Ajmer"],
+        Sikkim: ['Gangtok', "Namchi", "Gyalshing", "Mangan"],
+        Tamil_Nadu: ['Chennai', "Tiruchirappalli", "Madurai", "Erode", "Vellore", "Coimbatore"],
+        Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Adilabad", "Khammam"],
+        Tripura: ["Agartala", "Amarpur", "Kumarghat", "Udaipur", "Gakulnagar"],
+        Uttar_Pradesh: ["Lucknow", "Noida", "Varanasi", "Allahabad", "Agra", "Kanpur"],
+        Uttarakhand: ["Dehradun", "Haridwar", "Roorkee", "Rishikesh", "Kashipu"],
+        West_Bengal: ["Kolkata", "Darjeeling", "Siliguri", "Asansol", "Howrah", "Durgapur"]
+    }
+    console.log("City = ", document.getElementById("citySelect"))
+    function makeSubmenu(value) {
+        console.log(value)
+        console.log(value.length)
+
+        if(value.length==0) {
+            document.getElementById('citySelect').innerHTML = '<option></option>';
+            
+            console.log("if "+ document.getElementById("citySelect").innerHTML);
+
+        }
+        else {
+            var citiesOptions = "";
+            for(cityId in citiesByState[value]) {
+                console.log("City value = ",citiesByState[value]);
+                console.log("City Id = ",citiesByState[cityId]);
+
+                citiesOptions+='<option>'+citiesByState[value][cityId]+'</option>';
+                console.log("after loop = ",citiesOptions);
+            }
+            // var citySelect = document.getElementById("citySelect");
+            // select.outerHTML = select.outerHTML.replace(
+            //     select.innerHTML,
+            //     citiesOptions
+            // )
+            console.log("Before Overall = ",citiesOptions)
+            document.getElementById("citySelect").innerHTML = citiesOptions;
+            console.log("After Overall = ",citiesOptions)
+            // console.log("City = ", document.getElementById("citySelect"))
+        }
+    }
+    </script>
+
+
+{% endblock %}

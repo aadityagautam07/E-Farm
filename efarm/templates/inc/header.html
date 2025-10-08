@@ -1,0 +1,49 @@
+<!-- This Contains Header Code -->
+
+<!-- Start Main Top -->
+<div class="main-top">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="right-phone-box px-5">
+                    <p>Call US :- <a href="#"> +91 900 800 100</a></p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                {% if user.is_authenticated %}
+                <div class="login-box">
+                    <select id="basic" class="selectpicker show-tick form-control" onchange="location = this.value;">
+                        <option style="display:none">Hello -- {{ user | title }}</option>
+                        <option value="{% url 'logout_user' %}"><span class="glyphicon">&#xe163;</span>Log Out</option>
+                    </select>
+                </div>
+                {% else %}
+                <div class="login-box">
+                    <select id="basic" class="selectpicker show-tick form-control" onchange="location = this.value;">
+                        <option style="display:none;">Not Logged In Yet?</option>
+                        <option value="{% url 'register' %}">Register Here</option>
+                        <option value="{% url 'login' %}">Sign In</option>
+                    </select>
+                </div>
+                {% endif %}
+                <div class="text-slid-box" style="padding-left: 30px;">
+                    <div id="offer-box" class="carouselTicker">
+                        <ul class="offer-box">
+                            {% for discount in discounts %}
+                            {% if discount.discount != '0%' %}
+                            <li>
+                                <i class="fab fa-opencart"></i> {{ discount.category | title }} : {{ discount.discount }} off on {{ discount.product_name }} 
+                            </li>
+                            {% else %}
+
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Main Top -->

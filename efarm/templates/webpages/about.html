@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<body>
+
+    <!-- Start All Title Box -->
+    {% include "inc/titleBox.html" %}
+    <!-- End All Title Box -->
+
+    <!-- Start About Page  -->
+    <div class="about-box-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="banner-frame"> <img class="img-fluid" src="{% static 'images/about-img.jpg' %}"
+                            alt="" />
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="noo-sh-title-top">We are <span>Freshshop</span></h2>
+                    <p>Today we have over 9,000 Farmer Shareholders and more than 53,000 Country Members. We employ over 2,000 people and have a turnover of £495 million.
+
+                        Mole Valley Farmers trades with co-operative principles and has strong values in respect of the farming community. Our ethos has always been to help our farming members improve productivity and profitability by offering a whole range of products and services at competitive prices.
+                        
+                        Over the years the company has grown and today we operate 56 nationwide rural retail locations, comprising Mole Valley Farmers; Mole Country Stores and Farmdirect along with our direct to farm business providing feed, fertiliser and other inputs to the nation’s farmers.
+                        
+                        We provide additional services through Mole Valley Engineering, Mole Energy, Molecare Veterinary Services and Mole Insurance Services.</p>
+                </div>
+            </div>
+            <div class="row my-5">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="service-block-inner">
+                        <h3>Get Weekly Order List</h3>
+                        <p>View our 200+ products and grow your farming trust.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="service-block-inner">
+                        <h3>Order & Pay Online</h3>
+                        <p>Choose any category of product What you need and Pay online. </p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                    <div class="service-block-inner">
+                        <h3>Why Freshshop</h3>
+                        <p>Creating Healthier Families, Happier Farmers
+                            And A Sustainable Future Is Our Responsibility</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-12">
+                    <h2 class="noo-sh-title">Meet Our Team</h2>
+                </div>
+
+
+                <!-- Our Team Section Starts -->
+                
+                {% for member in teams %}
+                <div class="col-sm-6 col-lg-3">
+                    <div class="hover-team">
+                        <div class="our-team"> <img src="{{ member.your_photo.url }}" alt="" />
+                            <div class="team-content">
+                                <h3 class="title">{{ member.first_name }}</h3> <span class="post">{{ member.designation }}</span>
+                            </div>
+                            <ul class="social">
+                                <li>
+                                    <a href="{{ member.fb_link }}" class="fab fa-facebook"></a>
+                                </li>
+                                <li>
+                                    <a href="{{ member.twitter_link }}" class="fab fa-twitter"></a>
+                                </li>
+                                <li>
+                                    <a href="{{ member.linkedin_link }}" class="fab fa-google-plus"></a>
+                                </li>
+                                <li>
+                                    <a href="{{ member.youtube_link }}" class="fab fa-youtube"></a>
+                                </li>
+                            </ul>
+                            <div class="icon"> <i class="fa fa-plus" aria-hidden="true"></i> </div>
+                        </div>
+                        <div class="team-description">
+                            <p>{{ member.description | safe }}</p>
+                        </div>
+                        <hr class="my-0">
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Our Team Section Ends -->
+            </div>
+        </div>
+    </div>
+    <!-- End About Page -->
+
+</body>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/theme.css' %}" />
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap.min.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap-select.min.css' %}" /> {% endcomment %}
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/owl.carousel.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/font-awesome.min.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/animate.css' %}" />
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>My Account</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">My Account</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- My Account Starts-->
+<section class="account-page ptb-50">
+    <div class="container"> 
+    <div class="row"> 
+        <div class="col-6">  
+                <div class="panel-group chk-panel" id="accordion">
+                    <div class="panel"> 
+                        <div class="accordion-header">                              
+                            <a class="title-2 accordion-button" data-bs-toggle="collapse" data-bs-target="#accordion-1" href="#accordion-1" aria-expanded="true"> <span class="light-font">01. My </span> <strong> Account </strong> </a>                              
+                        </div>
+                        <div id="accordion-1" class="accordion-collapse collapse show">
+                            <div class="account-body">
+                                <ul>
+                                    <li>  
+                                        <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="{% url 'account-information' %}"> Edit your account information</a>
+                                    </li>
+                                    <li> 
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i>  
+                                        <a href="{% url 'change-password' %}"> Change your password</a>
+                                    </li>
+                                    <li>          
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="{% url 'address-book' %}"> Modify your address book entries</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} <div class="panel"> 
+                        <div class="accordion-header">                              
+                            <a class="title-2 accordion-button" data-bs-toggle="collapse" data-bs-target="#accordion-2" href="#accordion-2"> <span class="light-font">02. My  </span> <strong>  Orders </strong>  </a>                              
+                        </div>
+                        <div id="accordion-2" class="accordion-collapse collapse show">
+                            <div class="account-body">
+                                <ul>
+                                    <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="order-history.html"> View your order history</a>
+                                    </li>
+                                    <!-- <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i>  
+                                        <a href="review-rating.html"> Your reviews and ratings</a>
+                                    </li> -->
+                                    <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="{% url 'return_request' %}"> View your retun requests</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+
+                </div>
+        
+
+        </div>
+        <div class="col-6">  
+                <div class="panel-group chk-panel" id="accordion">
+                    {% comment %} <div class="panel"> 
+                        <div class="accordion-header">                              
+                            <a class="title-2 accordion-button" data-bs-toggle="collapse" data-bs-target="#accordion-1" href="#accordion-1" aria-expanded="true"> <span class="light-font">01. My </span> <strong> Account </strong> </a>                              
+                        </div>
+                        <div id="accordion-1" class="accordion-collapse collapse show">
+                            <div class="account-body">
+                                <ul>
+                                    <li>  
+                                        <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="account-information.html"> Edit your account information</a>
+                                    </li>
+                                    <li> 
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i>  
+                                        <a href="cng-pw.html"> Change your password</a>
+                                    </li>
+                                    <li>          
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="address-book.html"> Modify your address book entries</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> {% endcomment %}
+
+                    <div class="panel"> 
+                        <div class="accordion-header">                              
+                            <a class="title-2 accordion-button" data-bs-toggle="collapse" data-bs-target="#accordion-2" href="#accordion-2"> <span class="light-font">02. My  </span> <strong>  Orders </strong>  </a>                              
+                        </div>
+                        <div id="accordion-2" class="accordion-collapse collapse show">
+                            <div class="account-body">
+                                <ul>
+                                    <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="{% url 'order-history' %}"> View your order history</a>
+                                    </li>
+                                    <!-- <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i>  
+                                        <a href="review-rating.html"> Your reviews and ratings</a>
+                                    </li> -->
+                                    <li>
+                                         <i class="fa fa-arrow-circle-o-right clr-txt"></i> 
+                                        <a href="{% url 'return_request' %}"> View your retun requests</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            
+
+        </div>
+    </div>
+    </div>
+</section>
+
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/jquery-2.2.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/theme.js' %}"></script>
+{% comment %} <script type="text/javascript" src="{% static 'user-dashboard-static/js/bootstrap-select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/js/owl.carousel.min.js' %}"></script> {% endcomment %}
+
+
+<!-- / My Account Ends --> 
+{% endblock %}

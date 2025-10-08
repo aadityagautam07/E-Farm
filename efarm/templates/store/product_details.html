@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<!-- Start Shop Detail  -->
+<div class="shop-detail-box-main">
+    <div class="container">
+        <div class="row">
+
+            <!-- MAIN PRODUCT DETAILS SECTION STARTS -->
+            <div class="col-xl-5 col-lg-5 col-md-6">
+                <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
+                    <div class="carousel-inner" role="listbox">
+                        <div class="carousel-item active"> <img class="d-block w-100" src="{{ product.photo1.url }}"
+                                alt="First slide"> </div>
+                        <div class="carousel-item"> <img class="d-block w-100" src="{{ product.photo2.url }}"
+                                alt="Second slide"> </div>
+                        <div class="carousel-item"> <img class="d-block w-100" src="{{ product.photo3.url }}"
+                                alt="Third slide"> </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel-example-1" role="button" data-slide="prev">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel-example-1" role="button" data-slide="next">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                        <span class="sr-only">Next</span>
+                    </a>
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-1" data-slide-to="0" class="active">
+                            <img class="d-block w-100 img-fluid" src="{{ product.photo1.url }}" alt="" />
+                        </li>
+                        <li data-target="#carousel-example-1" data-slide-to="1">
+                            <img class="d-block w-100 img-fluid" src="{{ product.photo2.url }}" alt="" />
+                        </li>
+                        <li data-target="#carousel-example-1" data-slide-to="2">
+                            <img class="d-block w-100 img-fluid" src="{{ product.photo3.url }}" alt="" />
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-xl-7 col-lg-7 col-md-6">
+                <div class="single-product-details">
+                    <h2>{{ product.product_name }}</h2>
+
+                    {% if product.discount != '0%' %}
+                    <h5><p>Discount : {{ product.discount }}</p></h5>
+                    <h5> <del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <p>&#8377;{{ product.after_discount_price | floatformat:1 | intcomma }} <br>You Are Saving &#8377;{{ product.discount_amount | floatformat:1 | intcomma }}</p> </h5>
+                    {% else %}
+                    <h5><p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p> </h5>
+                    {% endif %}
+
+
+                    <!-- <p class="available-stock"><span> More than 20 available / <a href="#">8 sold </a></span> -->
+                    <p>
+                    <h4>Short Description:</h4>
+                    <p>{{ product.description | safe }}</p>
+                    
+                    <!-- <ul>
+                        <li>
+                            <div class="form-group quantity-box">
+                                <label class="control-label">Quantity</label>
+                                <input class="form-control" value="{{ item.quantity }}" min="0" max="20" type="number" readonly>
+                            </div>
+                        </li>
+                    </ul> -->
+                
+
+                    <div class="price-box-bar">
+                        <div class="cart-and-bay-btn">
+                            <!-- <a class="btn hvr-hover" data-fancybox-close="" href="#">Buy Now</a> -->
+
+                            <a class="btn hvr-hover update-cart" data-product="{{ product.id }}" data-action="add"
+                             data-fancybox-close="" href="#">Add to cart</a>
+                        </div>
+                    </div>
+
+                    <div class="add-to-btn">
+                        <div class="add-comp">
+                            <a class="btn hvr-hover update-wishlist" data-product="{{ product.id }}" href="#"><i class="fas fa-heart"></i> Add to wishlist</a>
+                            <!-- <a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a> -->
+                        </div>
+                        <div class="share-bar">
+                            <a class="btn hvr-hover" href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                            <a class="btn hvr-hover" href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a>
+                            <a class="btn hvr-hover" href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                            <a class="btn hvr-hover" href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a>
+                            <a class="btn hvr-hover" href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- MAIN PRODUCT DETAILS SECTION ENDS -->
+
+        </div>
+
+        <!-- Featured Products STARTS -->
+        <div class="row my-5">
+            <div class="col-lg-12">
+                <div class="title-all text-center">
+                    <h1>Featured Products</h1>
+                    <p>Products That We Recommend</p>
+                </div>
+                <div class="featured-products-box owl-carousel owl-theme">
+                    {% for i in is_featured %}
+                    <div class="item">
+                        <div class="products-single fix">
+                            <div class="box-img-hover">
+                                <img src="{{ i.front_image.url }}" class="img-fluid" alt="Image">
+                                <div class="mask-icon">
+                                    <ul>
+                                        <li><a href="{% url 'product_details' i.id %}" data-toggle="tooltip" data-placement="right" title="View"><i
+                                                    class="fas fa-eye"></i></a></li>
+                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                title="Add to Wishlist" data-product="{{ product.id }}" data-action="add"><i class="far fa-heart"></i></a></li>
+                                    </ul>
+                                    <a class="cart update-car" href="#"data-product="{{ product.id }}" data-action="add"
+                                    >Add to Cart</a>
+                                </div>
+                            </div>
+                            <div class="why-text">
+                                <h4>{{ i.product_name }}</h4>
+                                <h5>  {% if i.on_sale == True %}
+                                        <del>&#8377; {{ i.original_price  | floatformat:1 | intcomma }}</del> &#8377; {{ i.after_discount_price  | floatformat:1 | intcomma }}
+                                    {% else %}
+                                        <p>&#8377;{{ i.original_price  | floatformat:1 | intcomma }}</p>
+                                    {% endif %}
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Featured Products ENDS -->
+
+    </div>
+</div>
+<!-- End Cart -->
+
+{% endblock %}

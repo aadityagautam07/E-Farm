@@ -1,0 +1,1192 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block content %}
+
+<!-- Start Shop Page  -->
+<div class="shop-box-inner">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 col-lg-9 col-sm-12 col-xs-12 shop-content-right">
+                <div class="right-product-box">
+                    <div class="product-item-filter row">
+                        <div class="col-12 col-sm-8 text-center text-sm-left">
+                            <div class="toolbar-sorter-right">
+                                <span>Sort by </span>
+                                {% if request.session.filter_value %}
+                                <select id="basic" class="selectpicker show-tick form-control">
+                                    {% if request.session.filter_value == '0' %}
+                                    <option value="0" selected>Nothing</option>
+                                    <option value="2" >High Price → Low Price</option>
+                                    <option value="3">Low Price → High Price</option>
+                                    <option value="4">Sales</option>
+                                    {% elif request.session.filter_value == '2' %}
+                                    <option value="0" >Nothing</option>
+                                    <option value="2" selected>High Price → Low Price</option>
+                                    <option value="3">Low Price → High Price</option>
+                                    <option value="4">Sales</option>
+                                    {% elif request.session.filter_value == '3' %}
+                                    <option value="0">Nothing</option>
+                                    <option value="2">High Price → Low Price</option>
+                                    <option value="3" selected>Low Price → High Price</option>
+                                    <option value="4">Sales</option>
+                                    {% elif request.session.filter_value == '4' %}
+                                    <option value="0">Nothing</option>
+                                    <option value="2">High Price → Low Price</option>
+                                    <option value="3" >Low Price → High Price</option>
+                                    <option value="4" selected>Sales</option>
+                                    {% endif %}
+                                </select>
+                                {% else %}
+                                <select id="basic" class="selectpicker show-tick form-control" >
+                                    <option value="0" selected disabled hidden>Nothing</option>
+                                    <option value="2">High Price → Low Price</option>
+                                    <option value="3">Low Price → High Price</option>
+                                    <option value="4">Sales</option>
+                                </select>
+                                {% endif %}
+                            </div>
+
+                            {% comment %}
+                            {% if request.session.category_filter %}
+                                {% if request.session.category_filter == '1' %}
+                                <p>Showing all {{ machinery_product | length }} results</p>
+                                {% elif request.session.category_filter == '3' %}
+                                <p>Showing all {{ fertilizers_product | length }} results</p>
+                                {% elif request.session.category_filter == '4' %}
+                                <p>Showing all {{ seeds_product | length }} results</p>
+                                {% endif %}
+                            {% else %}
+                            <p>Showing all {{ all_products | length }} results</p>
+                            {% endif %}
+                            {% endcomment %}
+
+                            {% if request.session.filter_value != '0' and not request.session.category_filter %}
+                                {% if request.session.filter_value == '2' %}
+                                <p>Showing all {{ h_l | length }} results</p>
+                                {% elif request.session.filter_value == '3' %}
+                                <p>Showing all {{ l_h | length }} results</p>
+                                {% elif request.session.filter_value == '4' %}
+                                <p>Showing all {{ sales | length }} results</p>
+                                {% else %}
+                                <p>Showing all {{ all_products | length }} results</p>
+                                {% endif %}
+                            {% elif request.session.filter_value != '0' and request.session.category_filter %}
+                                {% if request.session.category_filter == 'machinery' and request.session.filter_value == '2' %}
+                                <p>Showing all {{ machinery_h_l | length }} results</p>
+                                {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '2' %}
+                                <p>Showing all {{ fertilizer_h_l | length }} results</p>
+                                {% elif request.session.category_filter == 'seed' and request.session.filter_value == '2' %}
+                                <p>Showing all {{ seed_h_l | length }} results</p>
+
+                                {% elif request.session.category_filter == 'machinery' and request.session.filter_value == '3' %}
+                                <p>Showing all {{ machinery_l_h | length }} results</p>
+                                {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '3' %}
+                                <p>Showing all {{ fertilizer_l_h | length }} results</p>
+                                {% elif request.session.category_filter == 'seed' and request.session.filter_value == '3' %}
+                                <p>Showing all {{ seed_l_h | length }} results</p>
+
+                                {% elif request.session.category_filter == 'machinery' and request.session.filter_value == '4' %}
+                                <p>Showing all {{ machinery_sales | length }} results</p>
+                                {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '4' %}
+                                <p>Showing all {{ fertilizer_sales | length }} results</p>
+                                {% elif request.session.category_filter == 'seed' and request.session.filter_value == '4' %}
+                                <p>Showing all {{ seed_sales | length }} results</p>
+                                {% endif %}
+
+                            {% else %}
+                            <p id="m">Showing all {{ all_products | length }} results</p>
+                            {% endif %}
+                            
+
+                        </div>
+                        <!-- <div class="col-12 col-sm-4 text-center text-sm-right">
+                            <ul class="nav nav-tabs ml-auto">
+                                <li>
+                                    <a class="nav-link active" href="#grid-view" data-toggle="tab"> <i
+                                            class="fa fa-th"></i> </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" href="#list-view" data-toggle="tab"> <i
+                                            class="fa fa-list-ul"></i> </a>
+                                </li>
+                            </ul>
+                        </div> -->
+                    </div>
+                    {% if request.session.filter_value != '0' and not request.session.category_filter %}
+                    <div class="product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row special-list">
+
+                                    {% if request.session.filter_value == '2' %}
+                                    {% for product in h_l %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price  | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span>
+                                            </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                    {% elif request.session.filter_value == '3' %}
+                                    {% for product in l_h %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del><span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                            </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                    {% elif request.session.filter_value == '4' %}
+                                    {% for product in sales %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del><span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                            </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                    {% endif %}
+                                
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% elif request.session.filter_value != '0' and request.session.category_filter %}
+                    <div class="product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row special-list">
+                                    
+
+                                    <!-- High To Low -->
+                                    {% if request.session.category_filter == 'machinery' and request.session.filter_value == '2' %}
+                                    {% for product in machinery_h_l %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid machinery">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '2' %}
+                                    {% for product in fertilizer_h_l %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid fertilizers">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'seed' and request.session.filter_value == '2' %}
+                                    {% for product in seed_h_l %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid seeds">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+
+
+
+
+
+
+
+                                    <!-- Low to High -->
+                                    {% elif request.session.category_filter == 'machinery' and request.session.filter_value == '3' %}
+                                    {% for product in machinery_l_h %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid machinery">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '3' %}
+                                    {% for product in fertilizer_l_h %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid fertilizers">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'seed' and request.session.filter_value == '3' %}
+                                    {% for product in seed_l_h %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid seeds">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+
+
+
+
+                                    <!-- Sales -->
+                                    {% elif request.session.category_filter == 'machinery' and request.session.filter_value == '4' %}
+                                    {% for product in machinery_sales %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid machinery">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'fertilizer' and request.session.filter_value == '4' %}
+                                    {% for product in fertilizer_sales %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid fertilizers">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% elif request.session.category_filter == 'seed' and request.session.filter_value == '4' %}
+                                    {% for product in seed_sales %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid seeds">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% endif %}
+
+
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="product-categorie-box">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                <div class="row special-list">
+
+                                    {% for product in machinery_product %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid machinery">
+                                        <div class="products-single fix ">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    {% if product.on_sale == True %}
+                                                    <p class="sale">Sale</p>
+                                                    {% endif %}
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid machinery">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+
+
+                                    {% for product in fertilizers_product %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid fertilizers">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <!-- <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid fertilizers">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div> -->
+                                    {% endcomment %}
+                                    {% endfor %}
+
+                                    {% for product in seeds_product %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid seeds">
+                                        <div class="products-single fix">
+                                            <div class="box-img-hover">
+                                                <div class="type-lb">
+                                                    <p class="sale">Sale</p>
+                                                </div>
+                                                <img src="{{ product.front_image.url }}" width="815px" height="737px" class="img-fluid" alt="Image">
+                                                <div class="mask-icon">
+                                                    <ul>
+                                                        <li><a href="{% url 'product_details' product.id %}"
+                                                                data-toggle="tooltip" data-placement="right"
+                                                                title="View"><i class="fas fa-eye"></i></a></li>
+                                                        <li><a href="#" data-toggle="tooltip" data-placement="right"
+                                                                title="Add to Wishlist" class="update-wishlist"
+                                                                data-product="{{ product.id }}" data-action="add"><i
+                                                                    class="far fa-heart" aria-hidden="true"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                    <a data-product="{{ product.id }}" data-action="add"
+                                                        class="cart update-cart" href="#">Add to Cart</a>
+                                                </div>
+                                            </div>
+                                            <div class="why-text">
+                                                <h4>{{ product.product_name }}</h4>
+                                                {% if product.on_sale == True %}
+                                                <h5>
+                                                    <p><del>&#8377; {{ product.original_price | floatformat:1 | intcomma }}</del> <span>&#8377; {{ product.after_discount_price | floatformat:1 | intcomma }}</span></p>
+                                               </h5>
+                                                {% else %}
+                                                <h5>
+                                                    <p>&#8377;{{ product.original_price | floatformat:1 | intcomma }}</p>
+                                                </h5>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %}{% empty %}
+                                    <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4 special-grid seeds">
+                                        <td>
+                                            <p>Sorry No Products to Show</p>
+                                        </td>
+                                    </div>
+                                    {% endcomment %}
+                                    {% endfor %}
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                   {% endif %}
+                    
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
+                <div class="product-categori">
+
+
+
+                    <!-- Search -->
+                    <div class="search-product search">
+                        <form action="{% url 'search' %}" method="GET">
+                            <input class="form-control" placeholder="Search here..." type="text" name="keyword">
+                            <button type="submit" name="submit" data-filter=".search"> <i class="fa fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- filter -->
+                    <div class="filter-sidebar-left">
+                        <div class="title-left">
+                            <h3>Categories</h3>
+                        </div>
+
+                        <div class="list-group list-group-collapse list-group-sm list-group-tree" id="list-group-men"
+                            data-children=".sub-men">
+
+                            <div class="special-menu" id="sub-men1" data-parent="#list-group-men">
+                                <div class="list-group">
+
+                                    {% if request.session.filter_value != '0' %}
+                                    <!-- <button class="list-group-item list-group-item-action " 
+                                        data-filter=".every">All</button> -->
+                                    <button class="list-group-item list-group-item-action " 
+                                        id="all" data-filter="* ">All</button>
+                                    <button class="list-group-item list-group-item-action "
+                                        id="machinery" data-filter=".machinery">Machinery</button>
+                                    <!-- <button class="list-group-item list-group-item-action "
+                                        id="crops" data-filter=".crops">Crops</button> -->
+                                    <button class="list-group-item list-group-item-action "
+                                        id="fertilizers"data-filter=".fertilizers">Fertilizers</button>
+                                    <button class="list-group-item list-group-item-action "
+                                        id="seeds"data-filter=".seeds">Seeds</button>
+
+                                    {% else %}
+
+                                    <!-- <button class="list-group-item list-group-item-action " 
+                                        data-filter=".every">All</button> -->
+                                    <button class="list-group-item list-group-item-action " 
+                                    onclick='document.getElementById("m").innerHTML = "Showing all {{ all_products | length }} results"'
+                                    data-filter="* ">All</button>
+                                    <button class="list-group-item list-group-item-action "
+                                    onclick='document.getElementById("m").innerHTML = "Showing all {{ machinery_product | length }} results"'
+                                    data-filter=".machinery">Machinery</button>
+                                    <!-- <button class="list-group-item list-group-item-action "
+                                        id="crops" data-filter=".crops">Crops</button> -->
+                                    <button class="list-group-item list-group-item-action "
+                                    onclick='document.getElementById("m").innerHTML = "Showing all {{ fertilizers_product | length }} results"'
+                                    data-filter=".fertilizers">Fertilizers</button>
+                                    <button class="list-group-item list-group-item-action "
+                                    onclick='document.getElementById("m").innerHTML = "Showing all {{ seeds_product | length }} results"'
+                                    data-filter=".seeds">Seeds</button>
+
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- End Shop Page -->
+
+
+<script type="text/javascript">
+    console.log('Before Value store filter')
+    // var your_selected_value = $('#basic option:selected').val();
+    // console.log(your_selected_value)
+
+    $('select').on('change', function() {
+        var your_selected_value = this.value;
+    
+        
+    
+        var url = '/store/store_filter/'
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({'Selected_Value': your_selected_value})
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+            console.log('data:', data)
+            location.reload()
+            $("div.basic select").val(data).change();
+        }) 
+    });
+    
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#all").click(function(){
+            var machinery = null;
+            var fertilizer = null;
+            var seed = null;
+            var all = '1';
+    
+            var url = '/store/category_filter/'
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log('data:', data)
+                    location.reload()
+            }) 
+        });
+    });
+
+    $(document).ready(function(){
+        $("#machinery").click(function(){
+            var machinery = '1';
+            var fertilizer = null;
+            var seed = null;
+            var all = null;
+    
+            var url = '/store/category_filter/'
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log('data:', data)
+                    location.reload()
+            }) 
+        });
+    });
+
+    $(document).ready(function(){
+        $("#fertilizers").click(function(){
+            var machinery = null;
+            var fertilizer = '1';
+            var seed = null;
+            var all = null;
+    
+            var url = '/store/category_filter/'
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log('data:', data)
+                    location.reload()
+            }) 
+        });
+    });
+
+    $(document).ready(function(){
+        $("#seeds").click(function(){
+            var machinery = null;
+            var fertilizer = null;
+            var seed = '1';
+            var all = null;
+    
+            var url = '/store/category_filter/'
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    console.log('data:', data)
+                    location.reload()
+            }) 
+        });
+    }); 
+
+    // $(document).ready(function(){
+    //     $("#a").click(function(){
+    //         var m = '0';
+    //         var a = '1';
+    //         var f = '0';
+    //         var s = '0';
+    
+    //         var url = '/store/category_filter/'
+
+    //         fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRFToken': csrftoken,
+    //             },
+    //             body: JSON.stringify({'m': m, 'f': f, 's': s, 'a': a})
+    //             })
+    //             .then((response) => {
+    //                 return response.json()
+    //             })
+    //             .then((data) => {
+    //                 console.log('data:', data)
+    //                 location.reload()
+    //         }) 
+    //     });
+    // });
+
+    // $(document).ready(function(){
+    //     $("#m").click(function(){
+            
+    
+    //         var url = '/store/category_filter/'
+
+    //         fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRFToken': csrftoken,
+    //             },
+    //             body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+    //             })
+    //             .then((response) => {
+    //                 return response.json()
+    //             })
+    //             .then((data) => {
+    //                 console.log('data:', data)
+    //                 location.reload()
+    //         }) 
+    //     });
+    // });
+
+    // $(document).ready(function(){
+    //     $("#f").click(function(){
+            
+    
+    //         var url = '/store/category_filter/'
+
+    //         fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRFToken': csrftoken,
+    //             },
+    //             body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+    //             })
+    //             .then((response) => {
+    //                 return response.json()
+    //             })
+    //             .then((data) => {
+    //                 console.log('data:', data)
+    //                 location.reload()
+    //         }) 
+    //     });
+    // });
+
+    // $(document).ready(function(){
+    //     $("#s").click(function(){
+            
+    
+    //         var url = '/store/category_filter/'
+
+    //         fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRFToken': csrftoken,
+    //             },
+    //             body: JSON.stringify({'machinery': machinery, 'fertilizer': fertilizer, 'seed': seed, 'all': all})
+    //             })
+    //             .then((response) => {
+    //                 return response.json()
+    //             })
+    //             .then((data) => {
+    //                 console.log('data:', data)
+    //                 location.reload()
+    //         }) 
+    //     });
+    // }); 
+</script> 
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+

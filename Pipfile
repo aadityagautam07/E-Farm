@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+pillow = "*"
+psycopg = "*"
+psycopg2 = "*"
+django-admin-volt = "*"
+django-ckeditor = "*"
+django-phonenumber-field = "*"
+pycryptodome = "*"
+django-allauth = "*"
+django-mathfilters = "*"
+django-active-link = "*"
+django-ash = "*"
+phonenumbers = "*"
+requests = "*"
+jwt = "*"
+pyjwt = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

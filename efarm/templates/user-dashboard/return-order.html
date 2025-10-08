@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/theme.css' %}" />
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap.min.css' %}" /> {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/bootstrap-select.min.css' %}" /> {% endcomment %}
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/owl.carousel.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/font-awesome.min.css' %}" />
+<link rel="stylesheet" href="{% static 'user-dashboard-static/naturix/css/plugin/animate.css' %}" />
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Return Requests</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'my-account' %}">My Account</a></li>
+                    <li class="breadcrumb-item active">Return Requests</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- My Account Starts-->
+<section class="account-page ptb-50">
+    <div class="container"> 
+        <!-- Shopping Cart Starts -->
+        <div class="cart-table">
+            <form class="cart-form">
+                <table class="product-table">
+                    <thead class="">
+                        <tr>                                                                       
+                            <th>product detail</th>  
+                            <th></th>
+                            <th>date</th> 
+                            <th>status</th>                                        
+                            <!-- <th>Action</th>                                         -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in items %}
+                        
+                        <tr>
+                            <td class="image">
+                                <div class="white-bg">
+                                    <a class="media-link" href="{% url 'product_details' i.product.id %}"><img width="300px" height="100px" class="img-fluid" src="{{ i.product.photo1.url }}" alt=""></a> 
+                                </div>
+                            </td>
+                            <td class="description">
+                                <h3 class="product-title no-margin"> <a href="#"> <span class="light-font"></span> <strong>{{ i.product.product_name  }}</strong> </a> </h3>
+                                <h6>{{ i.product.category | title }}</h6> 
+                                <div class="divider-2"></div>
+                                <div class="price fontbold-2"> 
+                                    <strong class="fsz-20">&#8377; {{ i.get_total | floatformat:1 | intcomma }} </strong> 
+                                </div>
+                                Quantity : <b class="fsz-16"> {{ i.quantity }} </b>                                                                                                                   
+                            </td>    
+                            <td> 
+                                <div class="text-center pt-20"> <b class="fsz-16"> {{ i.order_number.date_ordered }} </b> </div>
+                            </td>
+                            <td>
+                                {% if i.delivery == "Refunded" %}
+                                Amount Refunded
+                                {% elif i.delivery == "Return Order Request Accepted" %}
+                                Return Order Request Accepted
+                                {% endif %}
+                            </td>
+                                                                  
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>No Order Made Yet -------> <a href="{% url 'store' %}">Click here to Shop</a></td>
+                        </tr>      
+                        {% endfor %}
+                    </tbody>                               
+                </table>
+
+                <div class="continue-shopping text-center">
+                    <a href="{% url 'my-account' %}" class="theme-btn btn"> <b> Go Back </b> </a>                                    
+                </div>
+
+            </form>
+        </div>                    
+        <!-- / Shopping Cart Ends -->
+    </div>
+</section>
+<!-- / My Account Ends -->        
+
+
+
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/plugin/jquery-2.2.4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/naturix/js/theme.js' %}"></script>
+{% comment %} <script type="text/javascript" src="{% static 'user-dashboard-static/js/bootstrap-select.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'user-dashboard-static/js/owl.carousel.min.js' %}"></script> {% endcomment %}
+
+
+<!-- / My Account Ends --> 
+{% endblock %}

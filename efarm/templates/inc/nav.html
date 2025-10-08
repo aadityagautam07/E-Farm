@@ -1,0 +1,171 @@
+<!-- This Contains NavBar Code -->
+<!-- Also Contains Search Bar -->
+{% load humanize %}
+{% load static %}
+{% load active_link_tags %}
+
+
+<header class="main-header">
+    <!-- Start Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
+        <div class="container">
+            <!-- Start Header Navigation -->
+            <div class="navbar-header">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu"
+                    aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo.png' %}" class="logo"
+                        alt=""></a>
+            </div>
+            <!-- End Header Navigation -->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
+                    <li class="nav-item {% active_link '' 'active' %}"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item {% active_link 'about' 'active' %}"><a class="nav-link" href="{% url 'about' %}">About Us</a></li>
+                    <li class="dropdown {% active_link 'store || wishlist' 'active' %}">
+                        <a href="#" class="nav-link dropdown-toggle " data-toggle="dropdown">SHOP <i class="fa-solid fa-angles-down px-1"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'store' %}"><i class="fa-solid fa-shop px-2"></i> Sidebar Shop</a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping px-2"></i>Cart</a></li>
+                            <!-- <li><a href="{% url 'checkout' %}"><i class="fa-solid fa-bag-shopping px-2"></i>  Checkout</a></li> -->
+                            <!-- <li><a href="my-account.html">My Account</a></li> -->
+                            <li><a href="{% url 'wishlist' %}"><i class="fa-solid fa-heart px-2"></i>Wishlist</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item {% active_link 'gallery' 'active' %}"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
+                    <li class="nav-item {% active_link 'contact' 'active' %}"><a class="nav-link" href="{% url 'contact' %}">Contact Us</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+
+
+
+
+
+            {% if user.is_authenticated %}
+            <!-- Start Atribute Navigation -->
+            <div class="attr-nav">
+                    <ul>
+
+                        <li class="side-menu">
+                            <a href="">
+                                <i class="fa-solid fa-cart-shopping px-1"></i>
+                                <span class="badge">{{ order.get_cart_items }}</span>
+                                My Cart
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <!-- <b>{{ user.first_name }}</b> -->
+                            <a href="#" class="nav-item dropdown-toggle" data-toggle="dropdown"><i class="fa-solid fa-user px-2"></i><b>Hello, {{ user.first_name }}</b></a>
+                        
+                        <div class="dropdown-menu">
+                            <a class="nav-item"><center><b>{{ user.first_name }} {{ user.last_name }}</b></center></a>
+                            <hr class="p-0 m-0">
+                                <ul>
+                                    <li class="nav-item"><i class="fa-sharp fa-solid fa-circle-user px-2"></i><a href="{% url 'my-account' %}">Acoount</a></li>
+                                    <li class="nav-item"><i class="fa-solid fa-right-from-bracket px-2" style="color:red;"></i><a href="{% url 'logout_user' %}">Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+            </div>
+            <!-- End Atribute Navigation -->
+        </div>
+        <!-- Start Side Menu  -->
+        <div class="side">
+            <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+            <li class="cart-box">
+                <ul class="cart-list">
+
+                    {% for item in items %}
+                    <li>
+                        <a href="#" class="photo"><img src="{{ item.product.front_image.url }}" class="cart-thumb"
+                                alt="" /></a>
+                        <h6><a href="#">{{ item.product.product_name }}</a></h6>
+                        {% if item.product.discount != '0%' %}
+                        <p>{{ item.quantity }}x : <span class="price">&#8377; {{ item.product.original_price | floatformat:1 | intcomma }} - ({{ item.product.discount }})</span></p>
+                        {% else %}
+                        <p>{{ item.quantity }}x : <span class="price">&#8377; {{ item.product.original_price | floatformat:1 | intcomma }}</span></p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+
+                    <li class="total">
+                        <a href="{% url 'cart' %}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                        <span class="float-right"><strong>Total</strong>: &#8377; {{ order.get_cart_total | floatformat:1 | intcomma }}</span>
+                    </li>
+
+                </ul>
+
+            </li>
+        </div>
+        <!-- End Side Menu -->
+
+
+        {% else %}
+
+        <!-- Start Atribute Navigation -->
+        <div class="attr-nav">
+            <ul>
+                <li class="side-menu">
+                    <a href="">
+                        <i class="fa-solid fa-cart-shopping px-1"></i>
+                        <span class="badge">{{ order_cp.get_cart_items }}</span>
+                        My Cart
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- End Atribute Navigation -->
+        </div>
+        <!-- Start Side Menu -->
+        <div class="side">
+            <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+            <li class="cart-box">
+                <ul class="cart-list">
+                    {% for item in items_cp %}
+                    <li>
+                        <a href="#" class="photo"><img src="{{ item.product.imageURL }}" class="cart-thumb"
+                                alt="" /></a>
+                        <h6><a href="#">{{ item.product.name }}</a></h6>
+                        {% if item.product.discount != '0%' %}
+                        <p>{{ item.quantity }}x : <span class="price">&#8377; {{ item.product.price | floatformat:1 | intcomma }} - ({{ item.product.discount }})</span></p>
+                        {% else %}
+                        <p>{{ item.quantity }}x : <span class="price">&#8377; {{ item.product.price | floatformat:1 | intcomma }}</span></p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    <li class="total">
+                        <a href="{% url 'cart' %}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+                        <span class="float-right"><strong>Total</strong>: &#8377;  {{ order_cp.get_cart_total | floatformat:1 | intcomma }}</span>
+                    </li>
+
+                </ul>
+
+            </li>
+        </div>
+        <!-- End Side Menu -->
+        {% endif %}
+
+
+
+
+
+    </nav>
+    <!-- End Navigation -->
+</header>
+
+<div class="top-search">
+    <div class="container">
+        <div class="input-group">
+            <a href="/" id="search">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input type="text" name="search" id="search" placeholder="Search">
+            <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+            </a>
+        </div>
+    </div>
+</div>

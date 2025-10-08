@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load mathfilters %}
+
+{% block content %}
+
+<!-- Start All Title Box -->
+<div class="all-title-box">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Cart</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'store' %}">Shop</a></li>
+                    <li class="breadcrumb-item active">Cart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End All Title Box -->
+
+
+<!-- Start Cart  -->
+<div class="cart-box-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-main table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Images</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th></th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+
+
+                        {% if user.is_authenticated %}
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td class="thumbnail-img">
+                                    <a href="#">
+                                        <img class="img-fluid" src="{{ item.product.front_image.url }}" alt="" />
+                                    </a>
+                                </td>
+                                <td class="name-pr">
+                                    <a href="#">
+                                        {{ item.product.product_name }}
+                                    </a>
+                                </td>
+                                <td class="price">
+                                    {% if item.product.discount != '0%' %}
+                                    <p>&#8377; {{ item.product.original_price  | floatformat:1 | intcomma }} - ({{ item.product.discount }})</p>
+                                    {% else %}
+                                    <p>&#8377; {{ item.product.original_price  | floatformat:1 | intcomma }}</p>
+                                    {% endif %}
+                                </td>
+                                <td class="quantity-box"><input size="4" value="{{ item.quantity }}" min="0" step="1"
+                                        class="c-input-text qty" readonly></td>
+                                <td class="quantity">
+                                    <a class="btn update-cart" data-product="{{ item.product.id }}" data-action="add"
+                                        style="border:1px black solid">+</a>
+                                    <a class="btn update-cart" data-product="{{ item.product.id }}" data-action="remove"
+                                        style="border:1px black solid">-</a>
+                                </td>
+                                <td class="total-pr">
+                                    {% if item.product.discount != '0%'  %}
+                                    <p><del>&#8377; {{ item.product.original_price |mul:item.quantity | floatformat:1 | intcomma }}</del> &#8377; {{ item.get_total | floatformat:1 | intcomma }}</p>
+                                    {% else %}
+                                    <p>&#8377; {{ item.get_total | floatformat:1 | intcomma }}</p>
+                                    {% endif %}
+                                </td>
+                                <td class="remove-pr">
+                                    <a href="#" class="update-cart" data-product="{{ item.product.id }}"
+                                        data-action="delete">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td>Your Cart is Empty --------- <a href="{% url 'store' %}">Click here to Shop</a></td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                        {% else %}
+                        <tbody>
+                            {% for item in items_cp %}
+                            <tr>
+                                <td class="thumbnail-img">
+                                    <a href="#">
+                                        <img class="img-fluid" src="{{ item.product.imageURL }}" alt="" />
+                                    </a>
+                                </td>
+                                <td class="name-pr">
+                                    <a href="#">
+                                        {{ item.product.name }}
+                                    </a>
+                                </td>
+                                <td class="price-pr">
+                                    {% if item.product.discount != '0%' %}
+                                    <p>&#8377; {{ item.product.price | floatformat:1 | intcomma }} - ({{ item.product.discount }})</p>
+                                    {% else %}
+                                    <p>&#8377; {{ item.product.price | floatformat:1 | intcomma }}</p>
+                                    {% endif %}
+                                </td>
+                                <td class="quantity-box"><input size="4" value="{{ item.quantity }}" min="0" step="1"
+                                        class="c-input-text qty" readonly></td>
+                                <td class="quantity">
+                                    <a class="btn update-cart" data-product="{{ item.product.id }}" data-action="add"
+                                        style="border:1px black solid">+</a>
+                                    <a class="btn update-cart" data-product="{{ item.product.id }}" data-action="remove"
+                                        style="border:1px black solid">-</a>
+                                </td>
+                                <td class="total-pr">
+                                    <p>$ {{ item.get_total_with_discount | floatformat:1 | intcomma }}</p>
+                                </td>
+                                <td class="remove-pr">
+                                    <a href="#" class="update-cart" data-product="{{ item.product.id }}"
+                                        data-action="delete">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td>Your Cart is Empty --------- <a href="{% url 'store' %}">Click here to Shop</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-5">
+
+
+
+
+
+            {% if user.is_authenticated %}
+
+
+
+            <!-- YOUR ORDER STARTS -->
+            <div class="col-lg-40 col-sm-12">
+                <div class="order-box">
+                    <div class="title-left">
+                        <h3>Your order</h3>
+                    </div>
+                    <div class="d-flex">
+                        <div class="font-weight-bold">Product</div>
+                        <div class="ml-auto font-weight-bold">Total</div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex">
+                        <h4>Sub Total</h4>
+                        <div class="ml-auto font-weight-bold"> &#8377; {{ order.get_cart_original_total | floatformat:1 | intcomma }} </div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Discount</h4>
+                        <div class="ml-auto font-weight-bold">- &#8377; {{ order.get_cart_discount_total | floatformat:1 | intcomma }}  </div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex">
+                        <h4>Shipping Cost</h4>
+                        <div class="ml-auto font-weight-bold"> Free </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex gr-total">
+                        <h5>Grand Total</h5>
+                        <div class="ml-auto h5"> &#8377; {{ order.get_cart_total | floatformat:1 | intcomma }} </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            <!-- YOUR ORDER ENDS -->
+            {% else %}
+
+            <div class="col-lg-4 col-sm-6">
+                
+            </div>
+
+
+            <!-- YOUR ORDER STARTS -->
+            <div class="col-lg-40 col-sm-12">
+                <div class="order-box">
+                    <div class="title-left">
+                        <h3>Your order</h3>
+                    </div>
+                    <div class="d-flex">
+                        <div class="font-weight-bold">Product</div>
+                        <div class="ml-auto font-weight-bold">Total</div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex">
+                        <h4>Sub Total</h4>
+                        <div class="ml-auto font-weight-bold"> &#8377; {{ order_cp.get_cart_original_total | floatformat:1 | intcomma }} </div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Discount</h4>
+                        <div class="ml-auto font-weight-bold"> &#8377; {{ order_cp.discount_cp | floatformat:1 | intcomma }} </div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex">
+                        <h4>Shipping Cost</h4>
+                        <div class="ml-auto font-weight-bold"> Free </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex gr-total">
+                        <h5>Grand Total</h5>
+                        <div class="ml-auto h5"> &#8377; {{ order_cp.get_cart_total | floatformat:1 | intcomma }} </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            <!-- YOUR ORDER ENDS -->
+            {% endif %}
+            
+            {% if  order.get_cart_items != 0 %}
+            <div class="col-12 d-flex shopping-box"><a href="{% url 'checkout' %}"
+                    class="ml-auto btn hvr-hover">Checkout</a>
+            </div>
+            {% else %}
+            <div class="col-12 d-flex shopping-box"><a style="pointer-events:none;" href="{% url 'checkout' %}"
+                class="ml-auto btn hvr-hover">Checkout</a>
+            </div>
+            {% endif %}
+        </div>
+
+
+
+
+    </div>
+</div>
+<!-- End Cart -->
+
+{% endblock %}
